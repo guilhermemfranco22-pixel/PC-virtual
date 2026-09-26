@@ -1,70 +1,57 @@
 
 
 class VirtualPC:
-    def __init__(self, cpu, ram, storage):
+    def __init__(self, cpu, ram, storage, gpu):
         self.cpu = cpu
         self.ram = ram
         self.storage = storage
+        self.gpu = gpu
         self.running = False
 
     def start(self):
-        if self.running:
-            print("O PC já está ligado.")
-            return
-
         self.running = True
         print("\n=== PC VIRTUAL ===")
-        print("Inicializando...")
         print(f"CPU: {self.cpu}")
+        print(f"GPU: {self.gpu}")
         print(f"RAM: {self.ram} GB")
         print(f"Armazenamento: {self.storage} GB")
-        print("Sistema iniciado com sucesso!\n")
+        print("PC iniciado com sucesso!")
 
     def shutdown(self):
-        if not self.running:
-            print("O PC já está desligado.")
-            return
-
         self.running = False
         print("PC virtual desligado.")
 
     def info(self):
-        print("\n--- Informações do PC ---")
+        print("\n--- ESPECIFICAÇÕES ---")
         print(f"CPU: {self.cpu}")
+        print(f"GPU: {self.gpu}")
         print(f"RAM: {self.ram} GB")
-        print(f"Armazenamento: {self.storage} GB")
-        print(f"Status: {'Ligado' if self.running else 'Desligado'}")
+        print(f"SSD: {self.storage} GB")
 
 
-# BUILD DO PC VIRTUAL
 pc = VirtualPC(
     cpu="AMD Ryzen 7 7800X3D",
+    gpu="NVIDIA GeForce RTX 4070 SUPER 12 GB",
     ram=32,
     storage=1000
 )
 
-# MENU
 while True:
     print("\n===== PC VIRTUAL =====")
     print("1 - Ligar")
     print("2 - Desligar")
-    print("3 - Ver informações")
+    print("3 - Ver especificações")
     print("4 - Sair")
 
     escolha = input("Escolha: ")
 
     if escolha == "1":
         pc.start()
-
     elif escolha == "2":
         pc.shutdown()
-
     elif escolha == "3":
         pc.info()
-
     elif escolha == "4":
-        print("Encerrando...")
         break
-
     else:
         print("Opção inválida.")
