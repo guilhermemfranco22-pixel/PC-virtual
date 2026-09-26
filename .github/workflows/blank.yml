@@ -4,7 +4,7 @@ ram = "32 GB"
 armazenamento = "1 TB SSD"
 ligado = False
 
-while True:
+
     print()
     print("===== PC VIRTUAL =====")
     print("1 - Ligar")
