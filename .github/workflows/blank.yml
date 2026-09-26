@@ -1,42 +1,8 @@
-cpu = "AMD Ryzen 7 7800X3D"
-gpu = "NVIDIA GeForce RTX 4070 SUPER 12 GB"
-ram = "32 GB"
-armazenamento = "1 TB SSD"
-ligado = False
-
-
-    print()
-    print("===== PC VIRTUAL =====")
-    print("1 - Ligar")
-    print("2 - Desligar")
-    print("3 - Ver especificacoes")
-    print("4 - Sair")
-
-    opcao = input("Escolha: ")
-
-    if opcao == "1":
-        ligado = True
-        print("PC virtual ligado!")
-
-    elif opcao == "2":
-        ligado = False
-        print("PC virtual desligado!")
-
-    elif opcao == "3":
-        print()
-        print("CPU:", cpu)
-        print("GPU:", gpu)
-        print("RAM:", ram)
-        print("Armazenamento:", armazenamento)
-
-        if ligado:
-            print("Status: Ligado")
-        else:
-            print("Status: Desligado")
-
-    elif opcao == "4":
-        print("Programa encerrado.")
-        break
-
-    else:
-        print("Opcao invalida.")
+print("===== PC VIRTUAL =====")
+print("CPU: AMD Ryzen 7 7800X3D")
+print("GPU: NVIDIA GeForce RTX 4070 SUPER 12 GB")
+print("RAM: 32 GB")
+print("SSD: 1 TB")
+print("Sistema: Windows 11")
+print("Status: PC ligado")
+print("======================")
