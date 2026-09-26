@@ -1,5 +1,4 @@
 
-
 class VirtualPC:
     def __init__(self, cpu, ram, storage, gpu):
         self.cpu = cpu
@@ -53,5 +52,69 @@ while True:
         pc.info()
     elif escolha == "4":
         break
+    else:
+        print("Opção inválida.")
+Esse é um único código completo; pode copiar tudo de uma vez.
+
+
+Código está dando erro, pode arrumar por favor?
+
+Sim. O código anterior pode dar problema dependendo de onde você está executando. Aqui está uma versão mais simples e corrigida para Python 3:
+
+class VirtualPC:
+    def __init__(self):
+        self.cpu = "AMD Ryzen 7 7800X3D"
+        self.gpu = "NVIDIA GeForce RTX 4070 SUPER 12 GB"
+        self.ram = "32 GB"
+        self.storage = "1 TB SSD"
+        self.ligado = False
+
+    def ligar(self):
+        if self.ligado:
+            print("O PC já está ligado.")
+        else:
+            self.ligado = True
+            print("\nPC virtual ligado com sucesso!")
+
+    def desligar(self):
+        if not self.ligado:
+            print("O PC já está desligado.")
+        else:
+            self.ligado = False
+            print("\nPC virtual desligado.")
+
+    def especificacoes(self):
+        print("\n===== ESPECIFICAÇÕES =====")
+        print("CPU:", self.cpu)
+        print("GPU:", self.gpu)
+        print("RAM:", self.ram)
+        print("Armazenamento:", self.storage)
+        print("Status:", "Ligado" if self.ligado else "Desligado")
+
+
+pc = VirtualPC()
+
+while True:
+    print("\n===== PC VIRTUAL =====")
+    print("1 - Ligar")
+    print("2 - Desligar")
+    print("3 - Ver especificações")
+    print("4 - Sair")
+
+    opcao = input("Digite uma opção: ")
+
+    if opcao == "1":
+        pc.ligar()
+
+    elif opcao == "2":
+        pc.desligar()
+
+    elif opcao == "3":
+        pc.especificacoes()
+
+    elif opcao == "4":
+        print("Programa encerrado.")
+        break
+
     else:
         print("Opção inválida.")
