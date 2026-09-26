@@ -1,8 +1,632 @@
-print("===== PC VIRTUAL =====")
-print("CPU: AMD Ryzen 7 7800X3D")
-print("GPU: NVIDIA GeForce RTX 4070 SUPER 12 GB")
-print("RAM: 32 GB")
-print("SSD: 1 TB")
-print("Sistema: Windows 11")
-print("Status: PC ligado")
-print("======================")
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual PC</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #0879d1;
+}
+
+/* DESKTOP */
+#desktop {
+    width: 100vw;
+    height: 100vh;
+    background:
+        radial-gradient(circle at 50% 35%, #1e9bea, #075da8 70%);
+    position: relative;
+}
+
+/* ÍCONES */
+.icon {
+    width: 90px;
+    height: 90px;
+    margin: 15px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.icon:hover {
+    background: rgba(255,255,255,.15);
+}
+
+.icon .emoji {
+    font-size: 38px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* BARRA */
+#taskbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 52px;
+    background: rgba(20,20,20,.9);
+    display: flex;
+    align-items: center;
+    z-index: 9999;
+}
+
+#startButton {
+    width: 65px;
+    height: 52px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+#startButton:hover {
+    background: rgba(255,255,255,.12);
+}
+
+#clock {
+    margin-left: auto;
+    color: white;
+    padding: 15px;
+    font-size: 14px;
+}
+
+/* MENU INICIAR */
+#startMenu {
+    display: none;
+    position: absolute;
+    bottom: 52px;
+    left: 0;
+    width: 300px;
+    height: 400px;
+    background: rgba(25,25,25,.96);
+    color: white;
+    padding: 15px;
+    z-index: 10000;
+    border-radius: 8px 8px 0 0;
+}
+
+.startItem {
+    padding: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.startItem:hover {
+    background: #1976d2;
+}
+
+/* JANELAS */
+.window {
+    position: absolute;
+    width: 600px;
+    height: 400px;
+    background: white;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0,0,0,.5);
+    display: none;
+}
+
+.titlebar {
+    height: 38px;
+    background: #202020;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    cursor: move;
+}
+
+.title {
+    flex: 1;
+}
+
+.close {
+    width: 45px;
+    height: 38px;
+    border: none;
+    color: white;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.close:hover {
+    background: #e81123;
+}
+
+/* TERMINAL */
+#terminal {
+    background: #050505;
+    color: #00ff66;
+    height: calc(100% - 38px);
+    padding: 15px;
+    font-family: monospace;
+    overflow: auto;
+}
+
+#terminalInput {
+    width: 90%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #00ff66;
+    font-family: monospace;
+}
+
+/* NAVEGADOR */
+.browser {
+    height: calc(100% - 38px);
+    display: flex;
+    flex-direction: column;
+}
+
+.address {
+    display: flex;
+    padding: 8px;
+    background: #ddd;
+}
+
+.address input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #aaa;
+}
+
+.address button {
+    padding: 8px 15px;
+}
+
+.browser iframe {
+    flex: 1;
+    border: none;
+}
+
+/* NOTAS */
+#notes {
+    width: 100%;
+    height: calc(100% - 38px);
+    border: none;
+    resize: none;
+    outline: none;
+    padding: 15px;
+    font-size: 16px;
+}
+
+/* RESPONSIVO */
+@media(max-width:700px) {
+    .window {
+        width: 95vw;
+        height: 70vh;
+    }
+
+    #startMenu {
+        width: 270px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="desktop">
+
+    <div class="icon" onclick="openWindow('browserWindow')">
+        <span class="emoji">🌐</span>
+        Navegador
+    </div>
+
+    <div class="icon" onclick="openWindow('terminalWindow')">
+        <span class="emoji">💻</span>
+        Terminal
+    </div>
+
+    <div class="icon" onclick="openWindow('notesWindow')">
+        <span class="emoji">📝</span>
+        Bloco de Notas
+    </div>
+
+    <!-- NAVEGADOR -->
+    <div class="window" id="browserWindow">
+
+        <div class="titlebar">
+            <span class="title">🌐 Navegador</span>
+            <button class="close" onclick="closeWindow('browserWindow')">✕</button>
+        </div>
+
+        <div class="browser">
+
+            <div class="address">
+                <input id="urlInput"
+                       value="https://www.google.com"
+                       placeholder="Digite uma URL">
+
+                <button onclick="navigate()">Ir</button>
+            </div>
+
+            <iframe id="browserFrame"
+                    src="https://www.google.com">
+            </iframe>
+
+        </div>
+    </div>
+
+    <!-- TERMINAL -->
+    <div class="window" id="terminalWindow">
+
+        <div class="titlebar">
+            <span class="title">💻 Terminal</span>
+            <button class="close" onclick="closeWindow('terminalWindow')">✕</button>
+        </div>
+
+        <div id="terminal">
+
+            <div>
+                Virtual PC Terminal
+            </div>
+
+            <div>
+                Digite "help" para ver os comandos.
+            </div>
+
+            <br>
+
+            <span>guest@virtualpc:~$ </span>
+
+            <input id="terminalInput"
+                   autocomplete="off"
+                   autofocus>
+
+        </div>
+    </div>
+
+    <!-- NOTAS -->
+    <div class="window" id="notesWindow">
+
+        <div class="titlebar">
+            <span class="title">📝 Bloco de Notas</span>
+            <button class="close" onclick="closeWindow('notesWindow')">✕</button>
+        </div>
+
+        <textarea id="notes"
+                  placeholder="Digite suas notas aqui..."></textarea>
+
+    </div>
+
+    <!-- MENU INICIAR -->
+    <div id="startMenu">
+
+        <h2>Virtual PC</h2>
+
+        <div class="startItem"
+             onclick="openWindow('browserWindow')">
+            🌐 Navegador
+        </div>
+
+        <div class="startItem"
+             onclick="openWindow('terminalWindow')">
+            💻 Terminal
+        </div>
+
+        <div class="startItem"
+             onclick="openWindow('notesWindow')">
+            📝 Bloco de Notas
+        </div>
+
+        <div class="startItem"
+             onclick="shutdown()">
+            ⏻ Desligar
+        </div>
+
+    </div>
+
+    <!-- BARRA DE TAREFAS -->
+    <div id="taskbar">
+
+        <button id="startButton"
+                onclick="toggleStart()">
+            ⊞
+        </button>
+
+        <div id="clock"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* MENU */
+
+function toggleStart() {
+
+    const menu = document.getElementById("startMenu");
+
+    if(menu.style.display === "block") {
+        menu.style.display = "none";
+    } else {
+        menu.style.display = "block";
+    }
+
+}
+
+
+/* JANELAS */
+
+function openWindow(id) {
+
+    document.getElementById(id).style.display = "block";
+
+    document.getElementById("startMenu").style.display = "none";
+
+}
+
+function closeWindow(id) {
+
+    document.getElementById(id).style.display = "none";
+
+}
+
+
+/* RELÓGIO */
+
+function updateClock() {
+
+    const now = new Date();
+
+    const time =
+        now.toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
+    document.getElementById("clock").textContent = time;
+
+}
+
+setInterval(updateClock, 1000);
+
+updateClock();
+
+
+/* NAVEGADOR */
+
+function navigate() {
+
+    let url =
+        document.getElementById("urlInput").value.trim();
+
+    if(!url.startsWith("http://") &&
+       !url.startsWith("https://")) {
+
+        url = "https://" + url;
+
+    }
+
+    document.getElementById("browserFrame").src = url;
+
+}
+
+
+/* TERMINAL */
+
+const terminalInput =
+    document.getElementById("terminalInput");
+
+terminalInput.addEventListener("keydown", function(event) {
+
+    if(event.key !== "Enter")
+        return;
+
+    const command =
+        terminalInput.value.trim().toLowerCase();
+
+    const terminal =
+        document.getElementById("terminal");
+
+    const line =
+        document.createElement("div");
+
+    line.innerHTML =
+        "guest@virtualpc:~$ " +
+        terminalInput.value;
+
+    terminal.insertBefore(
+        line,
+        terminalInput.parentElement
+    );
+
+    let response = "";
+
+    if(command === "help") {
+
+        response =
+        "Comandos: help, clear, about, date, echo";
+
+    }
+
+    else if(command === "about") {
+
+        response =
+        "Virtual PC — sistema virtual executado no navegador.";
+
+    }
+
+    else if(command === "date") {
+
+        response =
+        new Date().toString();
+
+    }
+
+    else if(command === "clear") {
+
+        terminal.innerHTML = `
+            <span>guest@virtualpc:~$ </span>
+            <input id="terminalInput"
+                   autocomplete="off">
+        `;
+
+        setupTerminal();
+
+        return;
+
+    }
+
+    else if(command.startsWith("echo ")) {
+
+        response =
+        terminalInput.value.substring(5);
+
+    }
+
+    else if(command === "") {
+
+        response = "";
+
+    }
+
+    else {
+
+        response =
+        "Comando não encontrado: " + command;
+
+    }
+
+    if(response) {
+
+        const output =
+            document.createElement("div");
+
+        output.textContent = response;
+
+        terminal.insertBefore(
+            output,
+            terminalInput.parentElement
+        );
+
+    }
+
+    terminalInput.value = "";
+
+    terminal.scrollTop =
+        terminal.scrollHeight;
+
+});
+
+
+function setupTerminal() {
+
+    const input =
+        document.getElementById("terminalInput");
+
+    input.focus();
+
+    input.addEventListener(
+        "keydown",
+        arguments.callee
+    );
+
+}
+
+
+/* DESLIGAR */
+
+function shutdown() {
+
+    document.getElementById("desktop").innerHTML = `
+
+        <div style="
+            color:white;
+            width:100%;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+            font-family:Arial;
+        ">
+
+            <h1>Virtual PC desligado</h1>
+
+            <button onclick="location.reload()"
+                    style="
+                    padding:12px 25px;
+                    font-size:16px;
+                    cursor:pointer;
+                    ">
+                Ligar novamente
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* ARRASTAR JANELAS */
+
+document.querySelectorAll(".window").forEach(win => {
+
+    const bar =
+        win.querySelector(".titlebar");
+
+    let dragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    bar.addEventListener("mousedown", e => {
+
+        dragging = true;
+
+        const rect =
+            win.getBoundingClientRect();
+
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+
+    });
+
+    document.addEventListener("mousemove", e => {
+
+        if(!dragging) return;
+
+        win.style.left =
+            (e.clientX - offsetX) + "px";
+
+        win.style.top =
+            (e.clientY - offsetY) + "px";
+
+        win.style.transform = "none";
+
+    });
+
+    document.addEventListener("mouseup", () => {
+
+        dragging = false;
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
